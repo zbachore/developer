@@ -4,7 +4,6 @@ spark.sql('drop table if exists customers_target')
 
 # COMMAND ----------
 
-from pyspark.sql import SparkSession
 from pyspark.sql.functions import col, pandas_udf, split, concat_ws, lit, lower, current_timestamp
 import random
 import pandas as pd
@@ -66,7 +65,7 @@ customer_df = (
 customerdf = customer_df.dropDuplicates(["customer_id", "first_name", "last_name"])
 
 # Define the Delta table output path
-delta_output_path = f"/mnt/data/customers/customers_{timestamp}"
+delta_output_path = f"dbfs:/mnt/data/customers/customers_{timestamp}"
 
 # Create an empty Delta table with CDF enabled BEFORE inserting any data
 spark.sql(f"""
@@ -263,11 +262,6 @@ display(spark.sql(f"""
 select * from customers_target
 where updated_time >= '{job_beginning_time}'
 """))
-
-# COMMAND ----------
-
-# MAGIC %sql 
-# MAGIC SELECT * FROM customers_target
 
 # COMMAND ----------
 
